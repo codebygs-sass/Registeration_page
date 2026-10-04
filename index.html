@@ -615,7 +615,7 @@
         background-repeat: no-repeat;
       }
       .asure {
-        background: url("./Logos/23B\,\ USA");
+        background: url("./Logos/23B\,\ USA.png");
         background-size: cover; /* Scales the image to fill the container */
         background-position: center; /* Centers the image */
         background-repeat: no-repeat;
@@ -1408,6 +1408,22 @@
       document.getElementById("waLink").href = waBase;
       document.getElementById("waLink2").href = waBase;
 
+      // Meta Pixel: fire "Contact" whenever either WhatsApp link is clicked
+      function trackWhatsAppClick(source) {
+        if (typeof fbq === "function") {
+          fbq("track", "Contact", {
+            content_name: "AI Visibility Masterclass - WhatsApp",
+            content_category: source, // "primary" or "fallback"
+          });
+        }
+      }
+      document.getElementById("waLink").addEventListener("click", function () {
+        trackWhatsAppClick("primary");
+      });
+      document.getElementById("waLink2").addEventListener("click", function () {
+        trackWhatsAppClick("fallback");
+      });
+
       var form = document.getElementById("regForm");
       form.addEventListener("submit", function (e) {
         e.preventDefault();
@@ -1469,6 +1485,19 @@
         var thanks = document.getElementById("thanks");
         thanks.style.display = "block";
         thanks.classList.add("show");
+
+        // Meta Pixel: fire "Lead" on successful registration submission.
+        // Re-init with Advanced Matching data first so the Pixel can match this
+        // lead to a Facebook/Instagram account (it hashes email/phone itself).
+        if (typeof fbq === "function") {
+          fbq("init", "1575561561258289", {
+            em: email.toLowerCase(),
+            ph: phone ? phone.replace(/[^0-9]/g, "") : undefined,
+          });
+          fbq("track", "Lead", {
+            content_name: "AI Visibility Masterclass Registration",
+          });
+        }
       });
 
       document.getElementById("copyBtn").addEventListener("click", function () {
